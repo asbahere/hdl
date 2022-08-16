@@ -1,0 +1,87 @@
+create database labexam;
+use labexam;
+
+create table city(
+	cityId int primary key,
+    HDQ_ID varchar(20) UNIQUE NOT NULL,
+    cityName varchar(20) NOT NULL Unique
+);
+
+desc city;
+
+insert into city values(1,"a","Bangalore"),(2,"b","mumbai"),(3,"c","Delhi"),(4,"d","Belgaum"),(5,"e","Mysore");
+select * from city;
+
+create table stores(
+	storeId int primary key,
+    storeName varchar(20) NOT NULL,
+    cityId int,
+    foreign key(cityId) references city(cityId)
+    ON delete cascade
+);
+desc stores;
+
+insert into stores values(1,"iron and steel store",3),(2,"Minimap",2),(3,"Offhook",2),(4,"shophouse",2),(5,"decor Store",1);
+select * from stores;
+
+
+create table customers(
+	custId int primary key,
+    custName varchar(20) NOT NULL,
+     cityId int,
+    foreign key(cityId) references city(cityId)
+    ON delete cascade
+);
+
+insert into customers values(1,"mark",5),(2,"mayank",1),(3,"Ross",1),(4,"Joey",2),(5,"Monica",1);
+select * from stores;
+
+desc customers;
+
+create table hold(
+	itemId int primary key,
+    itemName varchar(20),
+    price real,
+    qty int,
+    storeId int,
+    foreign key(storeId) references stores(storeId)
+);
+desc hold;
+
+insert into hold values(1,"Pallet Jacks",50000,300,3),(2,"Service carts",20000,10000,3),(3,"Cranes",1000000,100,1),(4,"Castros",23000,200,3),(5,"Handtrucks",2000,1000,2);
+select * from hold;
+
+create table Item_ordered(
+	orderNo int primary key,
+    custId int,
+    foreign key(custId) references customers(custId)
+);
+desc item_ordered;
+
+insert into item_ordered values(1,2),(2,3),(3,2),(4,1),(5,3),(6,4);
+select * from item_ordered;
+
+create table ordered(
+	orderNo int,
+    itemId int,
+    qty_ordered int,
+    foreign key(orderNo) references Item_ordered(orderNo),
+    foreign key(itemId) references hold(itemId),
+    primary key(orderNo,itemId)
+);
+
+desc ordered;
+
+insert into ordered values(1,2,10),(1,3,3),(2,1,20),(2,4,30),(2,3,20),(3,1,11),(3,2,21),(4,5,8);
+select * from ordered;
+
+create table item_city(
+	itemId int,
+    cityId int,
+    qty_in_city int,
+     foreign key(cityId) references city(cityId),
+    foreign key(itemId) references hold(itemId),
+    primary key(itemId,cityId)
+);
+
+desc item_city;
